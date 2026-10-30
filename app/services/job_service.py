@@ -1,5 +1,9 @@
 from sqlalchemy.orm import Session
 
+from app.algorithms.job_recommendation import (
+    AllPublishedJobsStrategy,
+    JobRecommendationStrategy,
+)
 from app.core.exceptions import (
     BadRequestException,
     ForbiddenException,
@@ -15,10 +19,15 @@ from app.schemas.job import JobCreate, JobResponse
 class JobService:
     """Service encapsulating job vacancy management and querying."""
 
-    def __init__(self, session: Session) -> None:
+    def __init__(
+        self,
+        session: Session,
+        recommendation_strategy: JobRecommendationStrategy | None = None,
+    ) -> None:
         self.session = session
         self.job_repo = JobRepository(session)
         self.booking_repo = BookingRepository(session)
+        self.recommendation_strategy = recommendation_strategy or AllPublishedJobsStrategy()
 
     def create_job(self, employer: User, job_in: JobCreate) -> Job:
         if employer.role != UserRole.EMPLOYER:
@@ -61,7 +70,13 @@ class JobService:
         skip: int = 0,
         limit: int = 50,
     ) -> list[JobResponse]:
-        jobs = self.job_repo.list_published(category=category, location=location, skip=skip, limit=limit)
+        jobs = self.recommendation_strategy.recommend_jobs(
+            job_repo=self.job_repo,
+            category=category,
+            location=location,
+            skip=skip,
+            limit=limit,
+        )
         results: list[JobResponse] = []
         for job in jobs:
             booked = self.booking_repo.count_confirmed_by_job(job.id)
