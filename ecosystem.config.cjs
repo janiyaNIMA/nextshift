@@ -2,9 +2,9 @@ module.exports = {
   apps: [
     {
       name: "nextshift-api",
-      cwd: "/home/janidu/workbench/nextshift",
-      script: "/home/janidu/.local/bin/uv",
-      args: "run uvicorn app.main:app --host 0.0.0.0 --port 8000",
+      cwd: "/root/Projects/nextshift",
+      script: "/root/Projects/nextshift/.venv/bin/python",
+      args: "-m uvicorn app.main:app --host 0.0.0.0 --port 8000",
       interpreter: "none",
       autorestart: true,
       watch: false,
