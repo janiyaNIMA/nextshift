@@ -19,7 +19,7 @@ SQLALCHEMY_TEST_DATABASE_URL = "sqlite:///file:test_nextshift?mode=memory&cache=
 
 test_engine = create_engine(
     SQLALCHEMY_TEST_DATABASE_URL,
-    connect_args={"check_same_thread": False},
+    connect_args={"check_same_thread": False, "timeout": 30},
     poolclass=StaticPool,
 )
 TestingSessionLocal = sessionmaker(

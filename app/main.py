@@ -38,6 +38,14 @@ def create_app() -> FastAPI:
             content["data"] = exc.data
         return JSONResponse(status_code=exc.status_code, content=content)
 
+    # Global Exception Handler (Ensures CORS headers are always sent on 500 errors)
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        return JSONResponse(
+            status_code=500,
+            content={"detail": f"Database / Server Error: {str(exc)}"},
+        )
+
     # Mount Routers
     # Health check is public at root /health
     app.include_router(health_router)
