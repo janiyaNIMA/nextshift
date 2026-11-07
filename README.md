@@ -50,6 +50,10 @@ alembic/                          # Database schema migrations
 tests/                            # Integration test suite (SQLite in-memory)
 ```
 
+## API Documentation
+
+The current backend endpoint inventory is documented in [docs/API_ENDPOINTS.md](docs/API_ENDPOINTS.md).
+
 ### Representation of OOP Principles
 
 1. **Abstraction**:
